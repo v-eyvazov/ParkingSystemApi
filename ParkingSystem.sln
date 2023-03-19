@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingSystemAPI", "ParkingSystemAPI\ParkingSystemAPI.csproj", "{A1C56A19-44DA-48C7-A9D4-B6A567A35806}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1C56A19-44DA-48C7-A9D4-B6A567A35806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C56A19-44DA-48C7-A9D4-B6A567A35806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C56A19-44DA-48C7-A9D4-B6A567A35806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C56A19-44DA-48C7-A9D4-B6A567A35806}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F2F44155-5358-44FB-BB2D-F3CA2227CBDC}
+	EndGlobalSection
+EndGlobal
