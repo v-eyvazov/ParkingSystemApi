@@ -1,4 +1,5 @@
-﻿using ParkingSystemAPI.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ParkingSystemAPI.Data;
 using ParkingSystemAPI.DTO;
 using ParkingSystemAPI.Models;
 
@@ -14,7 +15,7 @@ namespace ParkingSystemAPI.Services.Impl
             _db = db;
         }
 
-        public ActivityDTO Save()
+        public ActivityDTO ReserveParkingLot()
         {
             ParkingLot reserveLot = _db.ParkingLots.Where(x => x.IsAvailable).ToList().First();
             reserveLot.IsAvailable = false;
@@ -30,6 +31,35 @@ namespace ParkingSystemAPI.Services.Impl
             _db.SaveChanges();
 
             return new ActivityDTO(activity.Id, activity.TicketNumber.ToString());
+        }
+
+        public ActivityDTO CheckoutParkingLot(string ticketNumber)
+        {
+            Activity activity = _db.Activities.Where(t => t.TicketNumber == new Guid(ticketNumber)).Include(p => p.ParkingLot).ToList().First();
+
+            // If null, gonna throw exception on the statement above
+            ParkingLot parkingLot = activity.ParkingLot!;
+
+            if (parkingLot.IsAvailable)
+            {
+                return new ActivityDTO(0, "0");
+            }
+
+            parkingLot.IsAvailable = true;
+
+
+            Activity checkout = new()
+            {
+                Action = "CHECKOUT",
+                ParkingLot = activity.ParkingLot
+            };
+
+            _db.Activities.Add(checkout);
+            _db.ParkingLots.Update(parkingLot);
+            _db.SaveChanges();
+
+            return new ActivityDTO(checkout.Id, checkout.TicketNumber.ToString());
+
         }
     }
 }

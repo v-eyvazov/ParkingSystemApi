@@ -28,40 +28,40 @@ namespace ParkingSystemAPI.Controllers
 
         [HttpGet]
         [Route("reserve")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TicketDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TicketDTO))]
-        public ActionResult<TicketDTO> Reserve()
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TicketDTOHandler))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TicketDTOHandler))]
+        public ActionResult<TicketDTOHandler> Reserve()
         {
             ActivityDTO activityDTO;
 
             try
             {
-                activityDTO = _ticketService.Save();
+                activityDTO = _ticketService.ReserveParkingLot();
             }
             catch (InvalidOperationException ex)
             {
                 _logger.LogError(ex.Message);
-                return StatusCode(StatusCodes.Status404NotFound, TicketDTO.NotFound("No available parking lots"));
+                return StatusCode(StatusCodes.Status404NotFound, TicketDTOHandler.NoFreeParkingLot());
             }
 
             byte[] qr = _qrGenerator.GenerateQR(activityDTO.TicketNumber);
 
             string filePath = _pdfGenerator.GeneratePDF(qr, activityDTO.Id.ToString());
 
-            return StatusCode(StatusCodes.Status201Created, TicketDTO.Created(filePath));
+            return StatusCode(StatusCodes.Status201Created, TicketDTOHandler.Created(filePath));
 
         }
 
         [HttpPost]
         [Route("download")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(FileErrorDTOHandler))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(FileErrorDTOHandler))]
         public ActionResult DownloadTicket([FromBody] FilePathDTO filePathDTO)
         {
 
             if (filePathDTO.FilePath == null || filePathDTO.FilePath.Length == 0)
             {
-                return BadRequest(new { description = "Invalid request body" });
+                return BadRequest(FileErrorDTOHandler.InvalidRequest());
             }
 
             string mimeType = "application/pdf";
@@ -76,7 +76,7 @@ namespace ParkingSystemAPI.Controllers
             catch (FileNotFoundException ex)
             {
                 _logger.LogError(ex.Message + "\nRequested source: " + filePathDTO.FilePath);
-                return NotFound(new { description = "No such file" });
+                return NotFound(FileErrorDTOHandler.NotFound());
             }
         }
 
