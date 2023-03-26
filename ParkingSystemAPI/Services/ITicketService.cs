@@ -4,7 +4,8 @@ namespace ParkingSystemAPI.Services
 {
     public interface ITicketService
     {
-        ActivityDTO CheckoutParkingLot(string ticketNumber);
+        void CheckoutParkingLot(string ticketNumber);
+        void CancelParkingLot(string ticketNumber);
         ActivityDTO ReserveParkingLot();
     }
 }

@@ -6,7 +6,7 @@ namespace ParkingSystemAPI.DTO
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? Desctiption { get; set; }
+        public string? Description { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? TicketLocation { get; set; }
@@ -15,7 +15,7 @@ namespace ParkingSystemAPI.DTO
 
         private TicketDTOHandler(string? description, string? ticketLocation)
         {
-            Desctiption = description;
+            Description = description;
             TicketLocation = ticketLocation;
         }
 
@@ -34,6 +34,11 @@ namespace ParkingSystemAPI.DTO
         public static TicketDTOHandler Created(string ticketLocation)
         {
             return new TicketDTOHandler(description: null, ticketLocation: ticketLocation);
+        }
+
+        public static TicketDTOHandler AlreadyAvailable()
+        {
+            return new TicketDTOHandler(description: "Parking lot is already available", ticketLocation: null);
         }
 
 

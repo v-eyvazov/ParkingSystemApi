@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ParkingSystemAPI.Data;
 using ParkingSystemAPI.DTO;
+using ParkingSystemAPI.Exceptions;
 using ParkingSystemAPI.Models;
 
 namespace ParkingSystemAPI.Services.Impl
@@ -33,7 +34,7 @@ namespace ParkingSystemAPI.Services.Impl
             return new ActivityDTO(activity.Id, activity.TicketNumber.ToString());
         }
 
-        public ActivityDTO CheckoutParkingLot(string ticketNumber)
+        public void CheckoutParkingLot(string ticketNumber)
         {
             Activity activity = _db.Activities.Where(t => t.TicketNumber == new Guid(ticketNumber)).Include(p => p.ParkingLot).ToList().First();
 
@@ -42,7 +43,7 @@ namespace ParkingSystemAPI.Services.Impl
 
             if (parkingLot.IsAvailable)
             {
-                return new ActivityDTO(0, "0");
+                throw new AlreadyAvailableException();
             }
 
             parkingLot.IsAvailable = true;
@@ -58,8 +59,32 @@ namespace ParkingSystemAPI.Services.Impl
             _db.ParkingLots.Update(parkingLot);
             _db.SaveChanges();
 
-            return new ActivityDTO(checkout.Id, checkout.TicketNumber.ToString());
+        }
 
+        public void CancelParkingLot(string ticketNumber)
+        {
+            Activity activity = _db.Activities.Where(t => t.TicketNumber == new Guid(ticketNumber)).Include(p => p.ParkingLot).ToList().First();
+
+            // If null, gonna throw exception on the statement above
+            ParkingLot parkingLot = activity.ParkingLot!;
+
+            if (parkingLot.IsAvailable)
+            {
+                throw new AlreadyAvailableException();
+            }
+
+            parkingLot.IsAvailable = true;
+
+
+            Activity checkout = new()
+            {
+                Action = "CANCEL",
+                ParkingLot = activity.ParkingLot
+            };
+
+            _db.Activities.Add(checkout);
+            _db.ParkingLots.Update(parkingLot);
+            _db.SaveChanges();
         }
     }
 }
