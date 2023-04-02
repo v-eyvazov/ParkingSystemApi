@@ -11,14 +11,14 @@ public class FilePathUtilServiceTests
 
     private readonly IFilePathUtilService _filePathUtilService;
     private readonly IConfiguration _configuration;
-    private readonly DirectoryDel _createDirectory;
+    private readonly Func<string, DirectoryInfo> _createDirectory;
 
     public FilePathUtilServiceTests()
     {
 
         //Dependencies
         _configuration = A.Fake<IConfiguration>();
-        _createDirectory = A.Fake<DirectoryDel>();
+        _createDirectory = A.Fake<Func<string, DirectoryInfo>>();
 
         //SUT
         _filePathUtilService = new FilePathUtilService(_configuration, _createDirectory);
@@ -35,6 +35,7 @@ public class FilePathUtilServiceTests
         string filePath = _filePathUtilService.GetFilePath(filename);
 
         //Assert
+        A.CallTo(() => _createDirectory(A<string>.Ignored)).MustHaveHappened();
         filePath.Should().NotBeNullOrWhiteSpace();
         filePath.Should().BeOfType<string>();
         filePath.Should().Contain(".pdf");

@@ -33,8 +33,7 @@ namespace ParkingSystemAPI.Controllers
         public async Task<ActionResult> Checkout([FromBody] FilePathDTO filePathDTO)
         {
 
-
-            // <--------------------------  Get the file byte array  ----------------------------->
+            #region "Get file byte array"
             byte[] pdfByteArray;
             try
             {
@@ -59,10 +58,10 @@ namespace ParkingSystemAPI.Controllers
                 _logger.LogError(ex.StackTrace);
                 return StatusCode(StatusCodes.Status500InternalServerError, FileErrorDTOHandler.NetworkProblem());
             }
+            #endregion
 
 
-
-            // <--------------------------------  Decrypt QR  -------------------------------------->
+            #region "Decrypt QR"
             string result;
             try
             {
@@ -78,10 +77,10 @@ namespace ParkingSystemAPI.Controllers
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, ClientDTOHandler.InvalidUri());
             }
+            #endregion
 
 
-
-            // <-------------------------------  Checkout in DB  ------------------------------------>
+            #region "Checkout in DB"
             try
             {
                 _ticketService.CheckoutParkingLot(result);
@@ -96,6 +95,7 @@ namespace ParkingSystemAPI.Controllers
                 _logger.LogError(al.Message);
                 return StatusCode(StatusCodes.Status208AlreadyReported, TicketDTOHandler.AlreadyAvailable());
             }
+            #endregion
 
             return Ok(CheckDTOHandler.Success());
 
@@ -110,8 +110,7 @@ namespace ParkingSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ClientDTOHandler))]
         public async Task<ActionResult> Cancel([FromBody] FilePathDTO filePathDTO)
         {
-
-            // <--------------------------  Get the file byte array  ----------------------------->
+            #region "Get file byte array"
             byte[] pdfByteArray;
             try
             {
@@ -136,10 +135,9 @@ namespace ParkingSystemAPI.Controllers
                 _logger.LogError(ex.StackTrace);
                 return StatusCode(StatusCodes.Status500InternalServerError, FileErrorDTOHandler.NetworkProblem());
             }
+            #endregion
 
-
-
-            // <--------------------------------  Decrypt QR  -------------------------------------->
+            #region "Decrypt QR"
             string result;
             try
             {
@@ -155,9 +153,9 @@ namespace ParkingSystemAPI.Controllers
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status400BadRequest, ClientDTOHandler.InvalidUri());
             }
+            #endregion
 
-
-            // <-------------------------------  Checkout in DB  ------------------------------------>
+            #region "Cancel in DB"
             try
             {
                 _ticketService.CancelParkingLot(result);
@@ -172,6 +170,7 @@ namespace ParkingSystemAPI.Controllers
                 _logger.LogError(al.Message);
                 return StatusCode(StatusCodes.Status208AlreadyReported, TicketDTOHandler.AlreadyAvailable());
             }
+            #endregion
 
             return Ok(CheckDTOHandler.Success());
 

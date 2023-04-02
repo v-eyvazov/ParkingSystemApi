@@ -1,15 +1,15 @@
 ﻿namespace ParkingSystemAPI.Services.Impl
 {
 
-    // for unit tests
-    public delegate DirectoryInfo DirectoryDel(string directory);
 
     public class FilePathUtilService : IFilePathUtilService
     {
         private readonly IConfiguration configuration;
-        private readonly DirectoryDel createDirectory;
 
-        public FilePathUtilService(IConfiguration configuration, DirectoryDel? createDirectory = null)
+        //for unit tests
+        private readonly Func<string, DirectoryInfo> createDirectory;
+
+        public FilePathUtilService(IConfiguration configuration, Func<string, DirectoryInfo>? createDirectory = null)
         {
             this.configuration = configuration;
             this.createDirectory = createDirectory ?? Directory.CreateDirectory;
