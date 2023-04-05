@@ -24,15 +24,14 @@ public class FilePathUtilServiceTests
         _filePathUtilService = new FilePathUtilService(_configuration, _createDirectory);
     }
 
-    [Theory]
-    [InlineData("Test")]
-    public void FilePathUtilService_GetFilePath_ReturnString(string filename)
+    [Fact]
+    public void FilePathUtilService_GetFilePath_ReturnsString()
     {
         //Arrange
-
+        string filename = "test";
 
         //Act
-        string filePath = _filePathUtilService.GetFilePath(filename);
+        var filePath = _filePathUtilService.GetFilePath(filename);
 
         //Assert
         A.CallTo(() => _createDirectory(A<string>.Ignored)).MustHaveHappened();

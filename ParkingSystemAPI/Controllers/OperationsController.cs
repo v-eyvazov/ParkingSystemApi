@@ -13,13 +13,13 @@ namespace ParkingSystemAPI.Controllers
 
         private readonly ITicketService _ticketService;
         private readonly ILogger<OperationsController> _logger;
-        private readonly IQRReaderClient _qrReaderClient;
+        private readonly IQRReaderClientService _qrReaderClientService;
 
-        public OperationsController(ITicketService ticketService, ILogger<OperationsController> logger, IQRReaderClient qRReaderClient)
+        public OperationsController(ITicketService ticketService, ILogger<OperationsController> logger, IQRReaderClientService qRReaderClientService)
         {
             _ticketService = ticketService;
             _logger = logger;
-            _qrReaderClient = qRReaderClient;
+            _qrReaderClientService = qRReaderClientService;
 
         }
 
@@ -65,7 +65,7 @@ namespace ParkingSystemAPI.Controllers
             string result;
             try
             {
-                result = await _qrReaderClient.DecryptQR(pdfByteArray);
+                result = await _qrReaderClientService.DecryptQR(pdfByteArray);
             }
             catch (TaskCanceledException ex)
             {
@@ -141,7 +141,7 @@ namespace ParkingSystemAPI.Controllers
             string result;
             try
             {
-                result = await _qrReaderClient.DecryptQR(pdfByteArray);
+                result = await _qrReaderClientService.DecryptQR(pdfByteArray);
             }
             catch (TaskCanceledException ex)
             {

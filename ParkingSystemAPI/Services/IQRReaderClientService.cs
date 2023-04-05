@@ -1,6 +1,6 @@
 ﻿namespace ParkingSystemAPI.Services
 {
-    public interface IQRReaderClient
+    public interface IQRReaderClientService
     {
         Task<string> DecryptQR(byte[] pdfByteArray);
     }

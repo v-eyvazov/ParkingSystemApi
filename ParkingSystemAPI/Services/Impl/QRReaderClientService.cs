@@ -2,7 +2,7 @@
 
 namespace ParkingSystemAPI.Services.Impl
 {
-    public class QRReaderClient : IQRReaderClient
+    public class QRReaderClientService : IQRReaderClientService
     {
         public async Task<string> DecryptQR(byte[] pdfByteArray)
         {

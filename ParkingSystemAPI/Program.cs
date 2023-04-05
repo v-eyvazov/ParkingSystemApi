@@ -24,7 +24,7 @@ namespace ParkingSystemAPI
             builder.Services.AddSingleton<IFilePathUtilService, FilePathUtilService>();
             builder.Services.AddSingleton<IPDFGeneratorService<SyncfusionPDFGeneratorService>, SyncfusionPDFGeneratorService>();
             builder.Services.AddSingleton<IPDFGeneratorService<PdfSharpCorePDFGeneratorService>, PdfSharpCorePDFGeneratorService>();
-            builder.Services.AddSingleton<IQRReaderClient, QRReaderClient>();
+            builder.Services.AddSingleton<IQRReaderClientService, QRReaderClientService>();
 
 
             builder.Services.AddControllers();
