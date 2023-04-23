@@ -5,11 +5,11 @@ namespace ParkingSystemAPI.DTO
     public class ClientDTOHandler
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? Desctiption { get; set; }
+        public string? Description { get; set; }
 
         private ClientDTOHandler(string? description)
         {
-            Desctiption = description;
+            Description = description;
         }
 
         public static ClientDTOHandler Timeout()
