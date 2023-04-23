@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using ParkingSystemAPI.Data;
+using ParkingSystemAPI.Repositories;
+using ParkingSystemAPI.Repositories.Impl;
 using ParkingSystemAPI.Services;
 using ParkingSystemAPI.Services.Impl;
 
@@ -14,11 +16,20 @@ namespace ParkingSystemAPI
 
             // Add services to the container.
 
+            builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+                       .WithExposedHeaders("content-disposition");
+            }));
+
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
             {
                 option.UseNpgsql(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
             });
 
+            builder.Services.AddScoped<IParkingLotRepository, ParkingLotRepository>();
             builder.Services.AddScoped<ITicketService, TicketService>();
             builder.Services.AddSingleton<IQRGeneratorService, QRGeneratorService>();
             builder.Services.AddSingleton<IFilePathUtilService, FilePathUtilService>();
@@ -40,6 +51,7 @@ namespace ParkingSystemAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseCors("MyPolicy");
 
             app.UseHttpsRedirection();
 

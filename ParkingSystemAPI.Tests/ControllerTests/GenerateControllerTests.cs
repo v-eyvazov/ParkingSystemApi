@@ -26,7 +26,7 @@ namespace ParkingSystemAPI.Tests.ControllerTests
             _qrGenerator = A.Fake<IQRGeneratorService>();
             _pdfGenerator = A.Fake<IPDFGeneratorService<PdfSharpCorePDFGeneratorService>>();
 
-            //SUTr
+            //SUT
             _generateController = new GenerateController(_logger, _ticketService, _qrGenerator, _pdfGenerator);
         }
 

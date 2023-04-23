@@ -5,11 +5,11 @@ namespace ParkingSystemAPI.DTO
     public class FileErrorDTOHandler
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? Desctiption { get; set; }
+        public string? Description { get; set; }
 
         private FileErrorDTOHandler(string? description)
         {
-            Desctiption = description;
+            Description = description;
         }
 
         public static FileErrorDTOHandler InvalidRequest()

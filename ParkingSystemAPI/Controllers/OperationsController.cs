@@ -25,35 +25,29 @@ namespace ParkingSystemAPI.Controllers
 
         [HttpPost]
         [Route("checkout")]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(FileErrorDTOHandler))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TicketDTOHandler))]
         [ProducesResponseType(StatusCodes.Status208AlreadyReported, Type = typeof(TicketDTOHandler))]
         [ProducesResponseType(StatusCodes.Status408RequestTimeout, Type = typeof(ClientDTOHandler))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ClientDTOHandler))]
-        public async Task<ActionResult> Checkout([FromBody] FilePathDTO filePathDTO)
+        public async Task<ActionResult> Checkout(IFormFile file)
         {
+
+            if (file == null || file.Length == 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, FileErrorDTOHandler.InvalidRequest());
+            }
 
             #region "Get file byte array"
             byte[] pdfByteArray;
             try
             {
-                pdfByteArray = System.IO.File.ReadAllBytes(filePathDTO.FilePath);
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                pdfByteArray = ms.ToArray();
             }
-            catch (Exception ex) when (
-                ex is ArgumentException
-                || ex is ArgumentNullException
-                || ex is PathTooLongException
-                || ex is DirectoryNotFoundException
-                || ex is FileNotFoundException
-                || ex is NotSupportedException
-                )
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, FileErrorDTOHandler.InvalidRequest());
-            }
-            catch (Exception ex) when (
-                ex is IOException
-                )
+            catch (Exception ex)
             {
                 _logger.LogError(ex.StackTrace);
                 return StatusCode(StatusCodes.Status500InternalServerError, FileErrorDTOHandler.NetworkProblem());
@@ -103,34 +97,28 @@ namespace ParkingSystemAPI.Controllers
 
         [HttpPost]
         [Route("cancel")]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(FileErrorDTOHandler))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(TicketDTOHandler))]
         [ProducesResponseType(StatusCodes.Status208AlreadyReported, Type = typeof(TicketDTOHandler))]
         [ProducesResponseType(StatusCodes.Status408RequestTimeout, Type = typeof(ClientDTOHandler))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ClientDTOHandler))]
-        public async Task<ActionResult> Cancel([FromBody] FilePathDTO filePathDTO)
+        public async Task<ActionResult> Cancel(IFormFile file)
         {
+            if (file == null || file.Length == 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, FileErrorDTOHandler.InvalidRequest());
+            }
+
             #region "Get file byte array"
             byte[] pdfByteArray;
             try
             {
-                pdfByteArray = System.IO.File.ReadAllBytes(filePathDTO.FilePath);
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                pdfByteArray = ms.ToArray();
             }
-            catch (Exception ex) when (
-                ex is ArgumentException
-                || ex is ArgumentNullException
-                || ex is PathTooLongException
-                || ex is DirectoryNotFoundException
-                || ex is FileNotFoundException
-                || ex is NotSupportedException
-                )
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, FileErrorDTOHandler.InvalidRequest());
-            }
-            catch (Exception ex) when (
-                ex is IOException
-                )
+            catch (Exception ex)
             {
                 _logger.LogError(ex.StackTrace);
                 return StatusCode(StatusCodes.Status500InternalServerError, FileErrorDTOHandler.NetworkProblem());

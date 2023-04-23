@@ -3,6 +3,7 @@ using ParkingSystemAPI.Data;
 using ParkingSystemAPI.DTO;
 using ParkingSystemAPI.Exceptions;
 using ParkingSystemAPI.Models;
+using ParkingSystemAPI.Repositories;
 
 namespace ParkingSystemAPI.Services.Impl
 {
@@ -10,15 +11,17 @@ namespace ParkingSystemAPI.Services.Impl
     {
 
         private readonly ApplicationDbContext _db;
+        private readonly IParkingLotRepository _activityRepository;
 
-        public TicketService(ApplicationDbContext db)
+        public TicketService(ApplicationDbContext db, IParkingLotRepository activityRepository)
         {
             _db = db;
+            _activityRepository = activityRepository;
         }
 
         public ActivityDTO ReserveParkingLot()
         {
-            ParkingLot reserveLot = _db.ParkingLots.Where(x => x.IsAvailable).ToList().First();
+            ParkingLot reserveLot = _activityRepository.GetAvailableParkingLot();
             reserveLot.IsAvailable = false;
 
             Activity activity = new()

@@ -56,7 +56,7 @@ namespace ParkingSystemAPI.Controllers
         [Route("download")]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(FileErrorDTOHandler))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(FileErrorDTOHandler))]
-        public ActionResult DownloadTicket([FromBody] FilePathDTO filePathDTO)
+        public IActionResult DownloadTicket([FromBody] FilePathDTO filePathDTO)
         {
 
             if (filePathDTO.FilePath == null || filePathDTO.FilePath.Length == 0)
